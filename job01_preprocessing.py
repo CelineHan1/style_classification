@@ -4,22 +4,24 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 
-img_dir = './img_file/military look female/'
-categories=['military','punk','retro','street']
-image_w=64
-image_h=64
+img_dir = './male fashion sample/'
+categories=['Bohemian','casual','military','modern','punk','retro']
+image_w=220
+image_h=220
 pixel=image_h*image_w*3
 X=[]
 Y=[]
 files=None
 print(list(enumerate(categories)))
 for idx, category in enumerate(categories):
-    files=glob.glob(img_dir+category+'*.jpg')
+    files=glob.glob(img_dir+category+'/*.jpg')
     print(category,len(files))
     print(files[:5])
     for i, f in enumerate(files):
         try:
             img=Image.open(f)
+            # print(img)
+            # img.show()
             img=img.convert('RGB')
             img=img.resize((image_w,image_h))
             data=np.asarray(img)
@@ -28,7 +30,7 @@ for idx, category in enumerate(categories):
             if i % 300 == 0:
                 print(category, ':', f)
         except:
-            print('error',f)
+             print('error',f)
 X=np.array(X)
 Y=np.array(Y)
 
@@ -41,4 +43,4 @@ print(X[0])
 print(Y[0])
 X_train, X_test, Y_train, Y_test = train_test_split(X,encoded_y,test_size=0.1)
 xy=(X_train, X_test, Y_train, Y_test)
-np.save('./datasets/binary_fashion_data.npy',xy)
+np.save('./dataset/size_110x110.npy',xy)
