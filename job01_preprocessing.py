@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 
-img_dir = './style_img'
+img_dir = './style_img/'
 categories=['bohemian male','casual male','military male','modern male','punk male','retro male','bohemian female','casual female','military female','modern female','punk female','retro female']
 image_w=220
 image_h=220
@@ -37,6 +37,7 @@ Y=np.array(Y)
 y = np.array(Y).reshape(-1, 1)
 encoder = OneHotEncoder(sparse=False)
 encoded_y = encoder.fit_transform(y)
+print(encoded_y)
 
 X= X/255
 print(X[0])
