@@ -6,8 +6,8 @@ from sklearn.preprocessing import OneHotEncoder
 
 img_dir = './style_img/'
 categories=['bohemian male','casual male','military male','modern male','punk male','retro male','bohemian female','casual female','military female','modern female','punk female','retro female']
-image_w=220
-image_h=220
+image_w=110
+image_h=110
 pixel=image_h*image_w*3
 X=[]
 Y=[]
@@ -16,7 +16,7 @@ print(list(enumerate(categories)))
 for idx, category in enumerate(categories):
     files=glob.glob(img_dir+category+'/*.jpg')
     print(category,len(files))
-    print(files[:5])
+    print(files[:3])
     for i, f in enumerate(files):
         try:
             img=Image.open(f)
@@ -42,6 +42,9 @@ print(encoded_y)
 X= X/255
 print(X[0])
 print(Y[0])
-X_train, X_test, Y_train, Y_test = train_test_split(X,encoded_y,test_size=0.1)
-xy=(X_train, X_test, Y_train, Y_test)
-np.save('./dataset/style_img_size_110x110.npy',xy)
+X_train, X_test, Y_train, Y_test = train_test_split(X,encoded_y,test_size=0.2)
+# xy=(X_train, X_test, Y_train, Y_test)
+np.save('./dataset/style_img_size_{}x{}_X_train.npy'.format(image_w,image_h),X_train)
+np.save('./dataset/style_img_size_{}x{}_X_test.npy'.format(image_w,image_h),X_test)
+np.save('./dataset/style_img_size_{}x{}_Y_train.npy'.format(image_w,image_h),Y_train)
+np.save('./dataset/style_img_size_{}x{}_Y_test.npy'.format(image_w,image_h),Y_test)
