@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPixmap
 from PIL import Image
 from keras.models import load_model
 import numpy as np
+import random
+import glob
 
 form_window = uic.loadUiType('./cat_and_dog.ui')[0]
 
@@ -14,9 +16,12 @@ class Exam(QWidget, form_window):
         self.setupUi(self)
         self.model_male = load_model('models/male_fashion_size_64_acc_69_ep_15.h5')
         self.model_female = load_model('models/female_fashion_size_64_acc_42.h5')
-        self.path=('../datasets/cat_dog/train/cat.4.jpg', '')
+        self.path=('./style_img/', '')
         self.label=['bohemian','casual','military','modern','punk','retro']
 
+
+
+        self.btn_recommend.clicked.connect(self.btn_recommend_slot)
         self.btn_open.clicked.connect(self.image_open_slot)
 
     def image_open_slot(self):
@@ -50,15 +55,27 @@ class Exam(QWidget, form_window):
                     data=data/255
                     data=data.reshape(1,64,64,3)
                     pred=self.model_female.predict(data)
-                    print('debug02')
+                    print('')
                     self.lbl_pred.setText(self.label[np.argmax(pred)])
                     print(self.label[np.argmax(pred)])
                 except:
                     print('error')
-    #
-    # def run_model(self):
 
+    def btn_recommend_slot(self):
 
+        self.sex = self.check_sex()
+        self.style = self.lbl_pred.text()
+        self.dir = './style_img/' + self.check_sex() + '/'+ self.style +'/'
+        print(self.dir)
+
+        # self.dir = self.path[0] + self.style
+        # print(self.dir)
+
+    def check_sex(self):
+        if self.chbox_male.isChecked() == True:
+            return 'male'
+        else:
+            return 'female'
 
 
 if __name__ == "__main__":
