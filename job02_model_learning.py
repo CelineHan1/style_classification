@@ -8,15 +8,18 @@ import tensorflow
 
 # help(model.compile)
 
-X_train, X_test, Y_train, Y_test =np.load('./dataset/male_fashion_sample_data.npy', allow_pickle=True)
+X_train, X_test, Y_train, Y_test =np.load('./dataset/style_img_size_110*110.npy', allow_pickle=True)
 print(Y_train[0])
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
-label = ['Bohemian','casual','military','modern','punk','retro']
+label=['bohemian male','casual male','military male','modern male','punk male','retro male','bohemian female','casual female','military female','modern female','punk female','retro female']
+
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3), input_shape=(220, 220, 3), padding='same', activation='relu'))
+model.add(MaxPool2D(padding='same', pool_size=(2, 2)))
+model.add(Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu'))
 model.add(MaxPool2D(padding='same', pool_size=(2, 2)))
 model.add(Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu'))
 model.add(MaxPool2D(padding='same', pool_size=(2, 2)))
@@ -26,7 +29,7 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.2))
-model.add(Dense(6, activation='softmax'))
+model.add(Dense(12, activation='softmax'))
 model.summary()
 model.compile(loss='categorical_crossentropy', optimizer='adam',metrics=['accuracy'])
 early_stopping = EarlyStopping(monitor='val_accuracy', patience=7)

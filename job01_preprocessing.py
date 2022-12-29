@@ -4,8 +4,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 
-img_dir = './male fashion sample/'
-categories=['Bohemian','casual','military','modern','punk','retro']
+img_dir = './style_img'
+categories=['bohemian male','casual male','military male','modern male','punk male','retro male','bohemian female','casual female','military female','modern female','punk female','retro female']
 image_w=220
 image_h=220
 pixel=image_h*image_w*3
@@ -43,4 +43,4 @@ print(X[0])
 print(Y[0])
 X_train, X_test, Y_train, Y_test = train_test_split(X,encoded_y,test_size=0.1)
 xy=(X_train, X_test, Y_train, Y_test)
-np.save('./dataset/size_110x110.npy',xy)
+np.save('./dataset/style_img_size_110x110.npy',xy)
