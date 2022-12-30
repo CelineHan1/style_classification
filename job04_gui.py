@@ -6,7 +6,9 @@ from PIL import Image
 from keras.models import load_model
 import numpy as np
 import random
+from random import sample
 import glob
+
 
 form_window = uic.loadUiType('./cat_and_dog.ui')[0]
 
@@ -21,18 +23,20 @@ class Exam(QWidget, form_window):
 
 
 
-        self.btn_recommend.clicked.connect(self.btn_recommend_slot)
+
         self.btn_open.clicked.connect(self.image_open_slot)
+        self.btn_recommend.clicked.connect(self.btn_recommend_slot)
 
     def image_open_slot(self):
-        self.path = QFileDialog.getOpenFileName(self, 'Open File', './style_img/test_img/', 'Image Files(*.jpg;*.png);;All Files(*.*)')
-        print(self.path)
-        if self.path[0]:
-            pixmap = QPixmap(self.path[0])
+        self.path_01 = QFileDialog.getOpenFileName(self, 'Open File', './style_img/test_img/', 'Image Files(*.jpg;*.png);;All Files(*.*)')
+        print(self.path_01)
+        if self.path_01[0]:
+            pixmap = QPixmap(self.path_01[0])
             self.lbl_image.setPixmap(pixmap)
+            # 남자 모델 실행
             if self.chbox_male.isChecked() == True:
                 try:
-                    img=Image.open(self.path[0])
+                    img=Image.open(self.path_01[0])
                     print('debug01')
                     img=img.convert('RGB')
                     img=img.resize((64,64))
@@ -47,7 +51,7 @@ class Exam(QWidget, form_window):
                     print('error')
             else:
                 try:
-                    img=Image.open(self.path[0])
+                    img=Image.open(self.path_01[0])
                     print('debug01')
                     img=img.convert('RGB')
                     img=img.resize((64,64))
@@ -63,13 +67,42 @@ class Exam(QWidget, form_window):
 
     def btn_recommend_slot(self):
 
+        print('path', self.path)
+        print('path', self.path_01)
         self.sex = self.check_sex()
         self.style = self.lbl_pred.text()
-        self.dir = './style_img/' + self.check_sex() + '/'+ self.style +'/'
-        print(self.dir)
+        self.dir = self.path[0] + self.check_sex() + '/'+ self.style +'/'
+        print('debug01',self.dir)
 
-        # self.dir = self.path[0] + self.style
-        # print(self.dir)
+        self.files = glob.glob(self.dir + '*.jpg')
+        print('debug02', len(self.files))
+        self.ranint5 = sample(range(len(self.files)), 3)
+        print('debug03', self.ranint5)
+        for i in range(3):
+            print('i :', i)
+            random_img = self.files[self.ranint5[i]]
+            # random_img = '{}\{}'.format(self.dir,self.files[self.ranint5[i]])
+            print('debug04', random_img)
+            # img = Image.open(random_img)
+            # print('debug05')
+            if i == 0:
+                print('if 0 start')
+                pixmap = QPixmap(random_img)
+                self.lbl_showimg01.setPixmap(pixmap)
+                print('if 0 end')
+
+            if i == 1:
+                print('if 1 start')
+                pixmap = QPixmap(random_img)
+                self.lbl_showimg02.setPixmap(pixmap)
+                print('if 1 end')
+
+            else:
+                print('if 2 start')
+                pixmap = QPixmap(random_img)
+                self.lbl_showimg03.setPixmap(pixmap)
+                print('if 2 end')
+
 
     def check_sex(self):
         if self.chbox_male.isChecked() == True:
@@ -83,6 +116,23 @@ if __name__ == "__main__":
     mainWindow = Exam()
     mainWindow.show()
     sys.exit(app.exec_())
+
+
+def uiUpdate():
+    # UI 파일이 있는 경로로 지정
+    path = glob.glob('./*.ui')
+    for ui_path in path:
+        ui_ = open(ui_path, 'r', encoding='utf-8')
+        lines_ = ui_.readlines()
+        ui_.close()
+        for ii, i in enumerate(lines_):
+            if 'include location' in i:
+                lines_[ii] = i.replace('.qrc', '.py')
+
+        ui_ = open(ui_path, 'w', encoding='utf-8')
+        [ui_.write(i) for i in lines_]
+        ui_.close()
+        print('{} update'.format(ui_path))
 
 
 
